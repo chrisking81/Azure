@@ -1,0 +1,57 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "targetMgID": {
+            "type": "string"
+        },
+        "enforcementMode": {
+            "type": "string",
+            "allowedValues": [
+                "Default",
+                "DoNotEnforce"
+            ],
+            "defaultValue": "Default"
+        },
+        "listOfResourceTypesAllowed": {
+            "type": "array"
+        }
+    },
+    "variables": {
+        "policyDefinitions": {
+            "allowResourceTypes": "/providers/Microsoft.Authorization/policyDefinitions/a08ec900-254a-4555-9bf5-e42af04b5c5c"
+        },
+        "policyAssignmentNames": {
+            "allowResourceTypes": "Allow-Resource-Types",
+            "description": "This policy enables you to specify the resource types that your organization can deploy. Only resource types that support 'tags' and 'location' will be affected by this policy. To restrict all resources please duplicate this policy and change the 'mode' to 'All'.",
+            "displayName": "[concat('Allow only CSO approved resource types in ', parameters('targetMgID'), ' MG')]",
+            "targetMgId": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('targetMgID'))]",
+            "nonComplianceMessages": [
+                {
+                    "message": "[concat('The resource type you have attempted to deploy has not been approved by CSO for use in the ', parameters('targetMgID'), ' MG. Please contact cso@contoso.com to have the service enabled.')]"
+                }
+            ]
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policyAssignments",
+            "apiVersion": "2021-06-01",
+            "name": "[variables('policyAssignmentNames').allowResourceTypes]",
+            "scope": "[variables('policyAssignmentNames').targetMgId]",
+            "properties": {
+                "description": "[variables('policyAssignmentNames').description]",
+                "displayName": "[variables('policyAssignmentNames').displayName]",
+                "policyDefinitionId": "[variables('policyDefinitions').allowResourceTypes]",
+                "enforcementMode": "[parameters('enforcementMode')]",
+                "nonComplianceMessages": "[variables('policyAssignmentNames').nonComplianceMessages]",
+                "parameters": {
+                    "listOfResourceTypesAllowed": {
+                        "value": "[parameters('listOfResourceTypesAllowed')]"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}
