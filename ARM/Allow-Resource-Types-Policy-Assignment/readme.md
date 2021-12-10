@@ -23,8 +23,8 @@ To quickly assign the policy taking the defaults, to only allow the deployment o
 ```powershell
 New-AzManagementGroupDeployment -Name "Allow-resource-types-assignment" `
           -Location "northeurope" `
-          -TemplateFile ./managementGroupTemplates/policyAssignments/ALLOW-ResourceTypesPolicyAssignment.json `
-          -TemplateParameterFile ./managementGroupTemplates/policyAssignments/ALLOW-ResourceTypesPolicyAssignment.parameters.json `
+          -TemplateFile ./ALLOW-ResourceTypesPolicyAssignment.json `
+          -TemplateParameterFile ./ALLOW-ResourceTypesPolicyAssignment.parameters.json `
           -Verbose   
 ```
 
