@@ -20,6 +20,7 @@ resource keyvault 'Microsoft.KeyVault/vaults@2022-07-01' = {
     }
     tenantId: tenant().tenantId
     softDeleteRetentionInDays: 7
+    enablePurgeProtection: true
     enableRbacAuthorization: true
     publicNetworkAccess: 'enabled'
     enabledForDeployment: true
@@ -81,6 +82,12 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
     name: 'Standard_LRS'
   }
   kind: 'StorageV2'
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${managedIdentity.id}': {}
+    }
+  }
   properties: {
     accessTier: 'Hot'
     isLocalUserEnabled: false
@@ -116,8 +123,17 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
         table: {
           keyType: 'Account'
         }
-
       }
+      keyvaultproperties: {
+        //keyvaulturi: keyvault.properties.vaultUri
+        keyname: 'cmkKey01'
+        keyversion: ''
+        keyvaulturi: endsWith(keyvault.properties.vaultUri, '/') ? substring(keyvault.properties.vaultUri, 0, length(keyvault.properties.vaultUri) - 1) : keyvault.properties.vaultUri
+      }
+      keySource: 'Microsoft.Keyvault'
     }
   }
 }
+output keyvaulturi string = keyvault.properties.vaultUri
+output managedidentityId string = managedIdentity.id
+output managedidentityName string = managedIdentity.name
