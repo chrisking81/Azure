@@ -15,7 +15,7 @@ var bastionSubnetName = 'AzureBastionSubnet'
 var onpremSubnetName01 = '${prefix}-onprem-subnet01'
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
-  name: '${prefix}-onprem-simluation-vnet01'
+  name: '${prefix}-onprem-sim-vnet01'
   location: location
   properties: {
     addressSpace: {
@@ -56,7 +56,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
 }
 
 resource bastionHostPublicIPAddress 'Microsoft.Network/publicIPAddresses@2022-07-01' = {
-  name: '${prefix}-onprem-simulation-bastionHost-pip01'
+  name: '${prefix}-onprem-sim-bastionHost-pip01'
   location: location
   sku: {
     name: 'Standard'
@@ -67,7 +67,7 @@ resource bastionHostPublicIPAddress 'Microsoft.Network/publicIPAddresses@2022-07
 }
 
 resource bastionHost 'Microsoft.Network/bastionHosts@2022-07-01' = {
-  name: '${prefix}-onprem-simulation-bastionHost'
+  name: '${prefix}-onprem-sim-bastionHost'
   location: location
   dependsOn: [
 
