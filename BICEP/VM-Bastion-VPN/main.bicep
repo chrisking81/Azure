@@ -6,6 +6,9 @@ param gatewaySubnetAddressPrefix string = '10.250.0.0/27'
 param bastionSubnetAddressPrefix string = '10.250.0.64/26'
 param onpremSubnetAddressPrefix string = '10.250.1.0/26'
 
+param dnsVmNic01IP01 string = '10.250.1.10'
+param dnsVmNic01IP02 string = '10.250.1.11'
+
 @description('Specifies the value of the secret that you want to create.')
 @secure()
 param vmPassword string
@@ -118,7 +121,8 @@ resource dnsVMnic 'Microsoft.Network/networkInterfaces@2020-11-01' = {
       {
         name: 'ipconf1'
         properties: {
-          privateIPAllocationMethod: 'dynamic'
+          privateIPAllocationMethod: 'Static'
+          privateIPAddress: dnsVmNic01IP01
           subnet: {
             id: virtualNetwork::onpremSubnetName.id
           }
@@ -128,7 +132,8 @@ resource dnsVMnic 'Microsoft.Network/networkInterfaces@2020-11-01' = {
       {
         name: 'ipconf2'
         properties: {
-          privateIPAllocationMethod: 'dynamic'
+          privateIPAllocationMethod: 'Static'
+          privateIPAddress: dnsVmNic01IP02
           subnet: {
             id: virtualNetwork::onpremSubnetName.id
           }
