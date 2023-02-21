@@ -22,6 +22,9 @@ var onpremSubnetName01 = '${prefix}-onprem-subnet01'
 var dnsVM01Name = '${prefix}-onprem-vm-dns01'
 var dnsVM01NicName = '${dnsVM01Name}-nic'
 var storageAccountName = take('${prefix}onpremsim${uniqueString(resourceGroup().id)}', 24)
+var bastionPublicIpName = '${prefix}-onprem-sim-bastionHost-pip01'
+var gatewayPublicIpName = '${prefix}-onprem-sim-vpngateway-pip01'
+var gatewayName = '${prefix}-onprem-sim-gateway'
 
 resource storageaccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   name: storageAccountName
@@ -74,7 +77,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
 }
 
 resource bastionHostPublicIPAddress 'Microsoft.Network/publicIPAddresses@2022-07-01' = {
-  name: '${prefix}-onprem-sim-bastionHost-pip01'
+  name: bastionPublicIpName
   location: location
   sku: {
     name: 'Standard'
@@ -196,5 +199,48 @@ resource dnsVMShutdownSchedule 'Microsoft.DevTestLab/schedules@2018-09-15' = {
     timeZoneId: 'UTC'
     targetResourceId: dnsVM.id
     taskType: 'ComputeVmShutdownTask'
+  }
+}
+
+resource vpnGatewayPublicIpAddress 'Microsoft.Network/publicIPAddresses@2022-07-01' = {
+  name: gatewayPublicIpName
+  location: location
+  sku: {
+    name: 'Standard'
+  }
+  properties: {
+    publicIPAllocationMethod: 'Static'
+  }
+}
+
+resource onpremVpnGateway 'Microsoft.Network/virtualNetworkGateways@2022-07-01' = {
+  name: gatewayName
+  location: location
+  properties: {
+    ipConfigurations: [
+      {
+        name: 'onpremSimGatewayConfig'
+        properties: {
+          privateIPAllocationMethod: 'Dynamic'
+          subnet: {
+            id: virtualNetwork::gatewaySubnetname.id
+          }
+          publicIPAddress: {
+            id: vpnGatewayPublicIpAddress.id
+          }
+        }
+      }
+    ]
+    gatewayType: 'Vpn'
+    sku: {
+      name: 'VpnGw2'
+      tier: 'VpnGw2'
+    }
+    vpnType: 'RouteBased'
+    vpnGatewayGeneration: 'Generation2'
+    enableBgp: true
+    bgpSettings: {
+      asn: 65010
+    }
   }
 }
