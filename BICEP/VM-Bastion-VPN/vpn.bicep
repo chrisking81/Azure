@@ -2,7 +2,6 @@
 @secure()
 param vpnSharedKey string
 
-//param onpremVnetId string
 param onpremGatewayId string
 
 param hubGatewaySubnetId string
@@ -64,27 +63,6 @@ resource hubGateway 'Microsoft.Network/virtualNetworkGateways@2022-07-01' = {
   }
 }
 
-/* resource hubToOnpremConnection 'Microsoft.Network/connections@2022-07-01' = {
-  name: hubToOnpremConnectionName
-  location: location
-  properties: {
-    virtualNetworkGateway1: {
-      id: hubGateway.id
-      properties: {
-      }
-    }
-    virtualNetworkGateway2: {
-      id: onpremGatewayId
-      properties: {
-
-      }
-    }
-    connectionType: 'Vnet2Vnet'
-    sharedKey: vpnSharedKey
-    enableBgp: true
-  }
-} */
-
 module hubToOnPremConnection 'vpnConnection.bicep' = {
   name: hubToOnpremConnectionName
   params: {
@@ -107,8 +85,3 @@ module onpremToHubConnection 'vpnConnection.bicep' = {
     vpnSharedKey: vpnSharedKey
   }
 }
-/* resource onpremToHubConnection 'Microsoft.Network/connections@2022-07-01' = {
-  name: onpremtoHubConnectionName
-  scope: resourceGroup(onpremSimSubscriptionId, onpremSimResourceGroup)
-}
- */
