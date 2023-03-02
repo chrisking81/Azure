@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmPassword": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/b6e03421-fe8e-40b8-a3c6-xxxxyyyyyyyyy/resourceGroups/chkin-onprem-sim-rg/providers/Microsoft.KeyVault/vaults/chkin-onprem-sim-kv01"
+        },
+        "secretName": "defaultVmPassword"
+      }
+    },
+    "vmUsername": {
+      "value": "vmAdmin"
+    }
+  }
+}

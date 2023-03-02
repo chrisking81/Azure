@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vpnSharedKey": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/b6e03421-fe8e-40b8-a3c6-xxxxyyyyyyyyy/resourceGroups/chkin-onprem-sim-rg/providers/Microsoft.KeyVault/vaults/chkin-onprem-sim-kv01"
+        },
+        "secretName": "vpnSharedKey"
+      }
+    },
+    "onpremGatewayId": {
+      "value": "/subscriptions/b6e03421-fe8e-40b8-a3c6-xxxxyyyyyyyyy/resourceGroups/chkin-onprem-sim-rg/providers/Microsoft.Network/virtualNetworkGateways/chkin-onprem-sim-gateway"
+    },
+    "hubGatewaySubnetId": {
+      "value": "/subscriptions/b6e03421-fe8e-40b8-a3c6-xxxxyyyyyyyyy/resourceGroups/chkin-vnethub-uksouth/providers/Microsoft.Network/virtualNetworks/chkin-hub-uksouth/subnets/GatewaySubnet"
+    },
+    "hubGatewayPublicIpName": {
+      "value": "chkin-vpn-gateway-pip01"
+    },
+    "hubGatewayName": {
+      "value": "chkin-vpngateway-01"
+    },
+    "hubAsn": {
+      "value": 65020
+    },
+    "hubToOnpremConnectionName": {
+      "value": "hub-to-onpremSim"
+    },
+    "onpremtoHubConnectionName": {
+      "value": "onpremSim-to-hub"
+    },
+    "onpremSimResourceGroup": {
+      "value": "chkin-onprem-sim-rg"
+    },
+    "onpremSimSubscriptionId": {
+      "value": "b6e03421-fe8e-40b8-a3c6-xxxxyyyyyyyyy"
+    }
+  }
+}
